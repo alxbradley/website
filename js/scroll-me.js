@@ -63,11 +63,6 @@
         this.sections = [];
         this.initSection();
     }
-    ScrollMe.init = function (yReferencePoint) {
-
-        SCROLL_Y_REF = yReferencePoint && yReferencePoint || 0;
-        return new ScrollMe();        
-    };
 
     ScrollMe.prototype = {
         initSection: function () {
@@ -141,6 +136,13 @@
             SCROLL_Y_REF = yReferencePoint && yReferencePoint || 0;
         }
     }
+
+    ScrollMe.init = function (yReferencePoint) {
+
+        SCROLL_Y_REF = yReferencePoint && yReferencePoint || 0;
+        return new ScrollMe();        
+    };
+
     if(!window.alx) {
         window.alx = {};
     }
