@@ -1,0 +1,76 @@
+<html>
+<style>
+    body {
+        height: 3000px;
+    }
+</style>
+<body>
+    
+</body>
+<script>
+function bind(fn, ctx) {
+    var args = Array.prototype.slice.call(arguments, 2);
+    return function () {
+        fn.apply(ctx, args);
+    }
+}
+
+var win = window;
+
+function ScrollHandler () {
+    this.hasScrolled = !!win.scrollY;
+    var self = this;
+    function handleScroll () {
+        self.handleScroll();
+    }
+    
+    this.addScrollHandler = win.addEventListener && function () {
+        //console.log('scroll handler added :' + new Date().getTime());
+        this.scrollLogic();
+        win.addEventListener('scroll', handleScroll);
+    } || function () {
+        //console.log('scroll handler added :' + new Date().getTime());
+        this.scrollLogic();
+        win.attachEvent('onscroll', handleScroll);
+    };
+    
+    this.removeScrollHandler = win.removeEventListener && function () {
+        //console.log('scroll handler removed:' + new Date().getTime());
+        win.removeEventListener('scroll', handleScroll);
+    } || function (fn) {
+        //console.log('scroll handler removed:' + new Date().getTime());
+        win.detachEvent('onscroll', handleScroll)
+    };
+    this.regexMap = {};
+    this.init();
+}
+ScrollHandler.prototype = {
+    init: function () {
+        this.addScrollHandler();
+    },
+    handleScroll: function () {
+        
+        console.log("handle scroll called: " + win.scrollY);
+        this.removeScrollHandler();
+        setTimeout(bind(this.addScrollHandler, this), 150);
+    },
+    scrollLogic: function () {
+        if(win.scrollY > 0 && !this.hasScrolled) {
+            this.setClassState('has-scrolled', true);
+        } else if(window.scrollY <= 0){
+            this.setHasScrolled('has-scrolled', false);
+        }
+    },
+    setClassState: function (cls, setState) {
+        var html = document.children[0],
+            regex = this.regexMap[cls] || (this.regexMap[cls] = new RegExp('\s*' + cls + '\s*','g'));
+        html.className = html.className.replace(regex, ' ');
+        if(hasScrolled) {
+            html.className += ' ' + cls;
+        }
+        this.hasScrolled = hasScrolled;
+    }
+};
+new ScrollHandler();
+</script>
+</html>
